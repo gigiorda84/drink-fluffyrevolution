@@ -321,15 +321,19 @@ footer .legal{opacity:.6;font-weight:400;}
     <div class="cta-card">
       <h2>Primo lotto limitato.<br>Chi è in lista, beve per primo.</h2>
 
-      <form id="waitlist" name="waitlist" method="POST" data-netlify="true" novalidate>
-        <input type="hidden" name="form-name" value="waitlist">
+      <form id="waitlist" name="waitlist" method="POST"
+            action="https://62ce9cd7.sibforms.com/serve/MUIFANl2PQDn-OCAhaCOr-dnwYiXj5klzbrbqZDatvO3SHpWabDpSJAHC2MaiDrqWX5bNbBQVnp3inXeo2a9bzYp-8td9OWoHAzFX7kRiP-74gBOiVEz--Ocd3mUNpvUINFXxIgGe2WkXfiYLxhaDtdid_ZYbKvimPjGkbDDvZ45ZTZwY2Q4PWwG0fnKVqybLlqjPpv5uocxb0IlTg=="
+            target="brevo_iframe" novalidate>
         <div class="form-row">
-          <input type="email" name="email" id="email" placeholder="La tua email" required
+          <input type="email" name="EMAIL" id="email" placeholder="La tua email" required
                  autocomplete="email" inputmode="email" aria-label="La tua email">
           <button type="submit">Avvisami →</button>
         </div>
+        <input type="text" name="email_address_check" value="" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden">
+        <input type="hidden" name="locale" value="en">
         <p class="micro">Ti diciamo tutto prima degli altri. Promesso: zero spam.</p>
       </form>
+      <iframe name="brevo_iframe" title="brevo" aria-hidden="true" tabindex="-1" style="display:none"></iframe>
 
       <div class="confirm" id="confirm" role="status">
         <span class="emoji">👀</span>
@@ -355,22 +359,19 @@ footer .legal{opacity:.6;font-weight:400;}
 
 // Gestione form waitlist
 document.getElementById('waitlist').addEventListener('submit',function(e){
-  e.preventDefault();
   var email=document.getElementById('email');
-  if(!email.value||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value)){
+  if(!email.value||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value.trim())){
+    e.preventDefault();
     email.focus();
     email.style.borderColor='#e0245e';
     return;
   }
+  // Email valida: il form viene inviato a Brevo (iframe nascosto), poi mostriamo la conferma
   var form=this;
-  var data=new URLSearchParams(new FormData(form)).toString();
-  // Invio compatibile con Netlify Forms; se ospiti altrove, sostituisci con il tuo endpoint
-  fetch('/',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:data})
-    .catch(function(err){console.warn('Invio non riuscito (endpoint non configurato):',err);})
-    .finally(function(){
-      form.style.display='none';
-      document.getElementById('confirm').style.display='block';
-    });
+  setTimeout(function(){
+    form.style.display='none';
+    document.getElementById('confirm').style.display='block';
+  },0);
 });
 </script>
 
